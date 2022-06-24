@@ -28,9 +28,19 @@ speaker_3 = get_recording(speaker=10, distance=10.0, sound_duration=0.25, rec_du
 speaker_4 = get_recording(speaker=0, distance=15.0, sound_duration=0.25, rec_duration=0.25, level=96)
 speaker_5 = get_recording(speaker=8, distance=20.0, sound_duration=0.25, rec_duration=0.25, level=98)
 
-# DRR recordings
-rec = get_drr_recording(speaker=8, distance=10.15, start_level=80, end_level=90, rec_duration=0.75)
+# DRR recordings, speaker height 106cm
+rec = get_drr_recording(speaker=8, distance=3.4, start_level=80, end_level=100, steps=0.5, rec_duration=0.5)
 rec.waveform()
+
+
+
 
 look = slab.Binaural('data/drr_recordings/FFhallway/uso/FFhallway_uso_distance-1015_level-88.wav')
 look.waveform()
+
+
+slab.Binaural('data/drr_recordings/FFhallway/chirp/FFhallway_chirp_distance-1015_level-80.wav').waveform()
+slab.Binaural('data/drr_recordings/FFhallway/chirp/FFhallway_chirp_distance-1015_level-100.wav').waveform()
+
+slab.Binaural('data/drr_recordings/FFhallway/chirp/N_FFhallway_chirp_distance-1015_level-80.wav').waveform()
+slab.Binaural('data/drr_recordings/FFhallway/chirp/N_FFhallway_chirp_distance-1015_level-100.wav').waveform()

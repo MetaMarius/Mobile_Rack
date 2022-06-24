@@ -46,7 +46,7 @@ def get_recording(speaker, distance=0.0, tone_frequency=800, sound_duration=1.0,
     # set multiplexer channel
     proc.SetTagVal('chan_number', speaker)
     proc.SoftTrg(1)
-    time.sleep(0.1)
+    time.sleep(0.01)
     print('\n   Multiplexer output channel set to ' + str(speaker))
 
     # create sound
@@ -237,13 +237,13 @@ def create_and_store_file(parent_folder, subject_folder, subject_id, trialsequen
 
 
 # DRR recordings
-def get_drr_recording(speaker, distance, start_level, end_level, rec_duration):
+def get_drr_recording(speaker, distance, start_level, end_level, steps, rec_duration):
     drr_folder_path = cwd / 'data' / 'drr_recordings' / 'FFhallway'
     current_level = start_level
     while current_level <= end_level:
-        file_name_pinknoise = 'FFhallway_pinknoise_distance-1015_level-' + str(current_level) + '.wav'
-        file_name_chirp = 'FFhallway_chirp_distance-1015_level-' + str(current_level) + '.wav'
-        file_name_uso = 'FFhallway_uso_distance-1015_level-' + str(current_level) + '.wav'
+        file_name_pinknoise = 'FFhallway_pinknoise_distance-' + str(int(distance*100)) + '_level-' + str(current_level) + '.wav'
+        file_name_chirp = 'FFhallway_chirp_distance-' + str(int(distance*100)) + '_level-' + str(current_level) + '.wav'
+        file_name_uso = 'FFhallway_uso_distance-' + str(int(distance*100)) + '_level-' + str(current_level) + '.wav'
         print('Now playing at ' + str(current_level) + 'dB')
         pinknoise_recording = get_recording(speaker=speaker, distance=distance, sound_duration=0.3,
                                             rec_duration=rec_duration, sound_type='pinknoise', level=current_level)
@@ -251,10 +251,10 @@ def get_drr_recording(speaker, distance, start_level, end_level, rec_duration):
                                         rec_duration=rec_duration, sound_type='chirp', level=current_level)
         uso_recording = get_recording(speaker=speaker, distance=distance, sound_duration=0.3,
                                       rec_duration=rec_duration, sound_type='USO', uso_number=7, level=current_level)
-        pinknoise_recording.write(drr_folder_path / 'pinknoise' / file_name_pinknoise)
-        chirp_recording.write(drr_folder_path / 'chirp' / file_name_chirp)
-        uso_recording.write(drr_folder_path / 'USO' / file_name_uso)
-        current_level += 2
+        pinknoise_recording.write(drr_folder_path / 'pinknoise' / file_name_pinknoise, normalise=False)
+        chirp_recording.write(drr_folder_path / 'chirp' / file_name_chirp, normalise=False)
+        uso_recording.write(drr_folder_path / 'USO' / file_name_uso, normalise=False)
+        current_level += steps
     print('Done')
     return pinknoise_recording
 
