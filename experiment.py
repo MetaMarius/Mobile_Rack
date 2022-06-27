@@ -20,14 +20,6 @@ experiment_results = experiment(n_reps=5, duration=0.25, sound_type='USO', uso_n
                                 )
 
 
-
-
-
-
-
-
-
-
 speaker_1 = get_recording(speaker=2, distance=0, sound_duration=0.25, level=90, rec_duration=0.25,
                           sound_type='USO', uso_number=29)
 speaker_2 = get_recording(speaker=11, distance=5.0, sound_duration=0.25, rec_duration=0.25, level=92)
@@ -42,12 +34,4 @@ rec.waveform()
 
 
 
-look = slab.Binaural('data/drr_recordings/FFhallway/uso/FFhallway_uso_distance-1015_level-88.wav')
-look.waveform()
 
-
-slab.Binaural('data/drr_recordings/FFhallway/chirp/FFhallway_chirp_distance-1015_level-80.wav').waveform()
-slab.Binaural('data/drr_recordings/FFhallway/chirp/FFhallway_chirp_distance-1015_level-100.wav').waveform()
-
-slab.Binaural('data/drr_recordings/FFhallway/chirp/N_FFhallway_chirp_distance-1015_level-80.wav').waveform()
-slab.Binaural('data/drr_recordings/FFhallway/chirp/N_FFhallway_chirp_distance-1015_level-100.wav').waveform()
