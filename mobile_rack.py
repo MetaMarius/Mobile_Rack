@@ -1,5 +1,4 @@
 import random
-
 from win32com.client import Dispatch
 import slab
 import numpy
@@ -111,24 +110,25 @@ def equalize_loudness(goal_luf=-25, dis_sp_1=1, dis_sp_2=1.5, dis_sp_3=3, dis_sp
             dis = dis_sp_4
         elif speaker == 8:
             dis = dis_sp_5
-        recording = get_recording(speaker=speaker, distance=dis, duration=0.25, level=level, sound_type=sound_type,
-                                  rec_channel=rec_channel, uso_number=uso_number)
+        recording = get_recording(speaker=speaker, distance=dis, sound_duration=0.25, level=level, sound_type=sound_type,
+                                  rec_channel=rec_channel, uso_number=uso_number, rec_duration=0.25)
         current_luf = meter.integrated_loudness(recording.data)  # measure loudness
         while current_luf < goal_luf:
-            level += 0.5
-            recording = get_recording(speaker=speaker, distance=dis, duration=0.25, level=level, sound_type=sound_type,
-                                      rec_channel=rec_channel, uso_number=uso_number)
+            level += 0.25
+            recording = get_recording(speaker=speaker, distance=dis, sound_duration=0.25, level=level, sound_type=sound_type,
+                                      rec_channel=rec_channel, uso_number=uso_number, rec_duration=0.25)
             current_luf = meter.integrated_loudness(recording.data)  # measure loudness
             print('Current LUF: ' + str(current_luf) + '   Current Level: ' + str(level))
         else:
             level_list.append(level)
-            # level -= 3
+            level -= 2
 
     return level_list
 
 
-def experiment(speaker=[2, 11, 10, 0, 8], n_reps=10, playing_order='random_permutation', tone_frequency=800,
-               duration=1.0, levels=[80, 80, 80, 80, 80], sound_type='pinknoise', uso_number=0):
+def experiment(room, parent_folder, subject_folder, subject_id, speaker_distances, speaker=[2, 11, 10, 0, 8], n_reps=10,
+               playing_order='random_permutation', tone_frequency=800, duration=1.0, levels=[80, 80, 80, 80, 80],
+               sound_type='pinknoise', uso_number=0, ):
     # create trialsequence
     seq = slab.Trialsequence(conditions=speaker, n_reps=n_reps, kind=playing_order)
 
@@ -170,7 +170,18 @@ def experiment(speaker=[2, 11, 10, 0, 8], n_reps=10, playing_order='random_permu
         proc._oleobj_.InvokeTypes(15, 0x0, 1, (3, 0), ((8, 0), (3, 0), (0x2005, 0)), 'play_data', 0, data)
 
         # save speaker variable in result data
-        seq.add_response(speaker)
+        actual_speaker = 0
+        if speaker == 2:
+            actual_speaker = 1
+        elif speaker == 11:
+            actual_speaker = 2
+        elif speaker == 10:
+            actual_speaker = 3
+        elif speaker == 0:
+            actual_speaker = 4
+        elif speaker == 8:
+            actual_speaker = 5
+        seq.add_response(actual_speaker)
 
         # set multiplexer channel according to speaker
         proc.SetTagVal('chan_number', speaker)
@@ -219,20 +230,23 @@ def experiment(speaker=[2, 11, 10, 0, 8], n_reps=10, playing_order='random_permu
         # print out live result
         print(str(right_response) + ' / ' + str(n))
         n += 1
-    responses = seq.save_json("sequence.json", clobber=True)
+    result_file = create_and_store_file(parent_folder=parent_folder, subject_folder=subject_folder, subject_id=subject_id,
+                                        trialsequence=seq, speaker_distances=speaker_distances, sound_type=sound_type, room=room)
     print("Finished")
-    return seq
+    return result_file
 
 
-def create_and_store_file(parent_folder, subject_folder, subject_id, trialsequence, speaker_setup):
-    file = slab.ResultsFile(subject=subject_folder, folder=parent_folder)
+def create_and_store_file(parent_folder, subject_folder, subject_id, trialsequence, speaker_distances, sound_type, room):
+    filename = room + '_' + sound_type
+    file = slab.ResultsFile(subject=subject_folder, folder=parent_folder, filename=filename)
     subject_id = subject_id
     file.write(subject_id, tag='subject_ID')
     today = datetime.now()
     file.write(today.strftime('%Y/%m/%d'), tag='Date')
     file.write(today.strftime('%H:%M:%S'), tag='Time')
-    file.write(speaker_setup, tag='Speaker_Setup')
+    file.write(speaker_distances, tag='Speaker_distances')
     file.write(trialsequence, tag='Trial')
+    file.write(sound_type, tag='Sound_type')
     return file
 
 
