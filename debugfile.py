@@ -3,27 +3,24 @@ from win32com.client import Dispatch
 import slab
 import numpy
 import time
-
+from mobile_rack import initialize, get_recording, experiment, create_and_store_file, equalize_loudness, get_drr_recording, select_channel, play
 proc = Dispatch('RPco.X')
+SAMPLERATE = 48828
+slab.set_default_samplerate(SAMPLERATE)
+initialize()
+
+sound = slab.Sound.tone(frequency=900, duration=0.5, level=85, samplerate=48000)
+
+sound.play()
 
 
-def initialize():
-    if proc.ConnectRP2('USB', 1) == 1:
-        print('   USB connection to RP2 established')
-    elif proc.ConnectRP2('USB', 1) == 0:
-        print('   ERROR: USB connection to RP2 failed')
-    if proc.ClearCOF() == 1:
-        print('   COF cleared')
-    elif proc.ClearCOF() == 0:
-        print('   ERROR: Failed to clear COF')
-    if proc.LoadCOF('C:/Users/neurobio/Desktop/mobile_rack.rcx') == 1:
-        print('   rcx file loaded successfully')
-    elif proc.LoadCOF('C:/Users/neurobio/Desktop/mobile_rack.rcx') == 0:
-        print('   ERROR: Failed to load rcx file ')
-    if proc.Run() == 1:
-        print('\n   Processor running...')
-    elif proc.Run() == 0:
-        print('\n   ERROR: Failed to run processor')
+
+select_channel(3)
+for n in range(0, 16):
+    print(n)
+    select_channel(n)
+    play(data=sound)
+    time.sleep(0.5)
 
 """
 speaker = 1

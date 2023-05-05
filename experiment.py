@@ -5,11 +5,11 @@ initialize()
 
 levels = equalize_loudness(goal_luf=-55, sound_type='pinknoise', rec_channel='dual')
 
-levels_1 = [85.0, 90.0, 91.5, 94.5, 95.5]
+levels = [85.0, 90.0, 91.5, 94.5, 95.5]
 
 # experiment run
-experiment_results = experiment(n_reps=5, duration=0.25, sound_type='USO', uso_number=12, levels=levels, room='FFhallway',
-                                parent_folder='error_distribution_experiments', subject_folder='Jakab', subject_id='Jakab',
+experiment_results = experiment(n_reps=1, duration=0.25, sound_type='tone', uso_number=12, levels=levels, room='test',
+                                parent_folder='test_parent_folder', subject_folder='test_subject_folder', subject_id='test_id',
                                 speaker_distances={
                                     'speaker_1': 150,
                                     'speaker_2': 200,

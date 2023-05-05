@@ -273,3 +273,19 @@ def get_drr_recording(speaker, distance, start_level, end_level, steps, rec_dura
     return pinknoise_recording
 
 
+def select_channel(channel):
+    proc.SetTagVal('chan_number', channel)
+    proc.SoftTrg(1)
+    time.sleep(0.01)
+    print('\n   Multiplexer output channel set to ' + str(channel))
+
+
+def play(data):
+    data= data.ramp(duration=0.05)
+    flattened_data = data.data.flatten()
+    proc.SetTagVal('playbuflen', len(flattened_data))
+    proc._oleobj_.InvokeTypes(15, 0x0, 1, (3, 0), ((8, 0), (3, 0), (0x2005, 0)), 'play_data', 0, flattened_data)
+    proc.SoftTrg(3)
+
+
+
