@@ -1,4 +1,0 @@
-{"subject_ID": "Marius"}
-{"date": "2022/06/14"}
-{"2022-06-14-20-09-28": "20:09:28"}
-{"trial": {"label": "", "n_reps": 3, "conditions": [1, 2], "n_conditions": 2, "trials": [1, 1, 2, 2, 2, 1], "this_n": 6, "this_trial": [], "finished": true, "data": [[1, 0, 0], [1, 0, 0], [2, 0, 0], [2, 0, 0], [2, 0, 0], [1, 0, 0]], "n_trials": 6, "n_remaining": -1, "kind": "random_permutation"}}
