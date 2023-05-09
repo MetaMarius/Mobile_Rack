@@ -1,0 +1,100 @@
+## Pin Assignment ##
+
+    RP2 Digital I/O:
+
+        Pin 01: Ground to Button Box Pin 01
+        Pin 02: N/A
+        Pin 03: Input from Button Box Pin 02
+        Pin 04: Input from Button Box Pin 03
+        Pin 05: Input from Button Box Pin 04
+        Pin 06: Input from Button Box Pin 05
+        Pin 07: Output to Multiplexer Control Input Pin 07
+        Pin 08: Output to Multiplexer Control Input Pin 08
+        Pin 09: Output to Multiplexer Control Input Pin 09
+        Pin 10: Output to Multiplexer Control Input Pin 10
+        Pin 11: N/A
+        Pin 12: N/A
+        Pin 13: Ground to Multiplexer Control Input Pin 13
+        Pin 14: N/A
+        Pin 15: Input from Button Box Pin 06
+        Pin 16: Input from Button Box Pin 07
+        Pin 17: Input from Button Box Pin 08
+        Pin 18: Input from Button Box Pin 09
+        Pin 19: Output to Multiplexer Control Input Pin 19
+        Pin 20: Output to Multiplexer Control Input Pin 20
+        Pin 21: Output to Multiplexer Control Input Pin 21
+        Pin 22: Output to Multiplexer Control Input Pin 22
+        Pin 23: N/A
+        Pin 24: N/A
+        Pin 25: N/A
+        GND (from Adapter): N/A
+
+    Button Box:
+
+        Pin 01: Ground to RP2 Digital I/O Pin 01
+        Pin 02: Output to RP2 Digital I/O Pin 03
+        Pin 03: Output to RP2 Digital I/O Pin 04
+        Pin 04: Output to RP2 Digital I/O Pin 05
+        Pin 05: Output to RP2 Digital I/O Pin 06
+        Pin 06: Output to RP2 Digital I/O Pin 15
+        Pin 07: Output to RP2 Digital I/O Pin 16
+        Pin 08: Output to RP2 Digital I/O Pin 17
+        Pin 09: Output to RP2 Digital I/O Pin 18
+        SHL (from Adapter): N/A
+
+    Multiplexer Control Input:
+
+        Pin 01: N/A
+        Pin 02: N/A
+        Pin 03: N/A
+        Pin 04: N/A
+        Pin 05: N/A
+        Pin 06: N/A
+        Pin 07: Input from RP2 Digital I/O Pin 7
+        Pin 08: Input from RP2 Digital I/O Pin 8
+        Pin 09: Input from RP2 Digital I/O Pin 9
+        Pin 10: Input from RP2 Digital I/O Pin 10
+        Pin 11: N/A
+        Pin 12: N/A
+        Pin 13: Ground to RP2 Digital I/O
+        Pin 14: N/A
+        Pin 15: N/A
+        Pin 16: N/A
+        Pin 17: N/A
+        Pin 18: N/A
+        Pin 19: Input from RP2 Digital I/O Pin 19
+        Pin 20: Input from RP2 Digital I/O Pin 20
+        Pin 21: Input from RP2 Digital I/O Pin 21
+        Pin 22: Input from RP2 Digital I/O Pin 22
+        Pin 23: N/A
+        Pin 24: N/A
+        Pin 25: N/A
+
+
+    Multiplexer Signal Out:
+
+        Pin 01: Ground
+        Pin 02: N/A
+        Pin 03: Analog Output 01 -> to speaker 2
+        Pin 04: Analog Output 03 -> to speaker 4
+        Pin 05: Analog Output 05 -> N/A
+        Pin 06: Analog Output 07 -> N/A
+        Pin 07: Analog Output 09 -> N/A
+        Pin 08: Analog Output 11 -> N/A
+        Pin 09: Analog Output 13 -> N/A
+        Pin 10: Analog Output 15 -> N/A
+        Pin 11: N/A
+        Pin 12: N/A
+        Pin 13: Ground
+        Pin 14: N/A
+        Pin 15: Analog Output 00 -> to speaker 1
+        Pin 16: Analog Output 02 -> to speaker 3
+        Pin 17: Analog Output 04 -> to speaker 5
+        Pin 18: Analog Output 06 -> N/A
+        Pin 19: Analog Output 08 -> N/A
+        Pin 20: Analog Output 10 -> N/A
+        Pin 21: Analog Output 12 -> N/A
+        Pin 22: Analog Output 14 -> N/A
+        Pin 23: N/A
+        Pin 24: N/A
+        Pin 25: N/A
