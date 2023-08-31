@@ -58,7 +58,7 @@ def get_recording(speaker, distance=0.0, tone_frequency=800, sound_duration=1.0,
     elif sound_type == 'USO':
         sound = USOs[uso_number]
         sound.level = level
-    sound = sound.ramp(duration=0.05)
+    sound = sound.ramp()
 
     # write sound onto rp2
     data = sound.data.flatten()
@@ -67,7 +67,7 @@ def get_recording(speaker, distance=0.0, tone_frequency=800, sound_duration=1.0,
 
     # set up recording
     proc.SetTagVal('analog_in_1', 1)
-    proc.SetTagVal('anlog_in_2', 2)
+    proc.SetTagVal('analog_in_2', 2)
     proc.SetTagVal('recbuflen', slab.Sound.in_samples(rec_duration, SAMPLERATE))
     delay = distance/343.2
     proc.SetTagVal('rec_delay', int(delay*1000))
@@ -162,7 +162,7 @@ def experiment(room, parent_folder, subject_folder, subject_id, speaker_distance
         elif sound_type == 'USOrand':
             test_sound = slab.Sound(USOs[random.randint(0, 29)])
             test_sound.level = level
-        test_sound = test_sound.ramp(duration=0.05)
+        test_sound = test_sound.ramp()
 
         # write sound onto rp2
         data = test_sound.data.flatten()
@@ -274,6 +274,7 @@ def get_drr_recording(speaker, distance, start_level, end_level, steps, rec_dura
 
 
 def select_channel(channel):
+
     proc.SetTagVal('chan_number', channel)
     proc.SoftTrg(1)
     time.sleep(0.01)
@@ -288,4 +289,9 @@ def play(data):
     proc.SoftTrg(3)
 
 
-
+def get_slider_val():
+    val = float()
+    while proc.ReadTagV('analog_sig_2', 0, 1)[0] > 0.01:
+        val = proc.ReadTagV('analog_sig_2', 0, 1)[0]
+        time.sleep(0.01)
+    return val

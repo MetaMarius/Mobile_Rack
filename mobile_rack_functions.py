@@ -4,6 +4,9 @@ import time
 import numpy as np
 import pyloudnorm as pyln
 from datetime import datetime
+import math
+import collections
+
 proc = Dispatch('RPco.X')
 SAMPLERATE = 48828
 slab.set_default_samplerate(SAMPLERATE)
@@ -36,10 +39,38 @@ def select_channel(channel):
     print('Multiplexer output channel set to ' + str(channel))
 
 
+def select_speaker(speaker):
+    channel_mapping = {1: 0, 2: 1, 3: 4, 4: 5, 5: 8, 6: 9}
+    ch_out = channel_mapping[speaker]
+    proc.SetTagVal('chan_number', ch_out)
+    proc.SoftTrg(1)
+    time.sleep(0.01)
+    print('Multiplexer output channel set to ' + str(speaker))
+
+
 def write_onto_play_buffer(data):
     flattened_data = data.flatten()
     proc.SetTagVal('playbuflen', len(flattened_data))
     proc._oleobj_.InvokeTypes(15, 0x0, 1, (3, 0), ((8, 0), (3, 0), (0x2005, 0)), 'play_data', 0, flattened_data)
+
+
+def wait_for_button_press():
+    while proc.GetTagVal('response') == 0:
+        time.sleep(0.001)
+
+
+def get_button_press():
+    if proc.GetTagVal('response') == 1.0:
+        response = 0
+    elif proc.GetTagVal('response') == 2.0:
+        response = 1
+    elif proc.GetTagVal('response') == 4.0:
+        response = 2
+    elif proc.GetTagVal('response') == 8.0:
+        response = 3
+    elif proc.GetTagVal('response') == 16.0:
+        response = 4
+    return response
 
 
 def play(sound=slab.Sound, level=None):
@@ -52,11 +83,12 @@ def play(sound=slab.Sound, level=None):
     proc.SoftTrg(3)
 
 
-def get_recording(sound=slab.Sound, channel=int(), speaker_distance=float(), level=80, record_stereo=True):
+def get_recording(sound=slab.Sound, channel=int(), speaker_distance=float(), level=80, record_stereo=True, rec_length=None):
     # set multiplexer channel
     select_channel(channel)
     sound.level = level
     sound = sound.ramp()
+    rec_length = sound.n_samples if rec_length is None else slab.Signal.in_samples(rec_length, sound.samplerate)
 
     # write sound onto rp2
     write_onto_play_buffer(data=sound.data)
@@ -64,7 +96,7 @@ def get_recording(sound=slab.Sound, channel=int(), speaker_distance=float(), lev
     # set up recording
     proc.SetTagVal('analog_in_1', 1)
     proc.SetTagVal('analog_in_2', 2)
-    proc.SetTagVal('recbuflen', len(sound))
+    proc.SetTagVal('recbuflen', rec_length)
     delay = speaker_distance/343.2
     proc.SetTagVal('rec_delay', int(delay*1000))
 
@@ -74,17 +106,17 @@ def get_recording(sound=slab.Sound, channel=int(), speaker_distance=float(), lev
     print('recording...')
 
     # save recording
-    time.sleep(sound.duration + 0.1)
+    time.sleep(rec_length/SAMPLERATE + 0.1)
     if record_stereo is True:
-        rec_data_1 = proc.ReadTagV('rec_data_1', 0, len(sound))
+        rec_data_1 = proc.ReadTagV('rec_data_1', 0, rec_length)
         rec_data_1 = np.asarray(rec_data_1)
-        rec_data_2 = proc.ReadTagV('rec_data_2', 0, len(sound))
+        rec_data_2 = proc.ReadTagV('rec_data_2', 0, rec_length)
         rec_data_2 = np.asarray(rec_data_2)
         rec_binaural = slab.Binaural([rec_data_1, rec_data_2])
         print('Recording finished!')
         return rec_binaural
     elif record_stereo is False:
-        rec_data_1 = proc.ReadTagV('rec_data_1', 0, len(sound))
+        rec_data_1 = proc.ReadTagV('rec_data_1', 0, rec_length)
         rec_data_1 = np.asarray(rec_data_1)
         rec_monaural = slab.Sound(rec_data_1)
         print('Recording finished!')
@@ -184,5 +216,20 @@ def experiment(sound, location, sound_type, result_folder_path, subject_id, chan
     return result_file
 
 
+def get_slider_val():
+    return proc.ReadTagV('analog_sig_2', 0, 1)[0]
 
+
+def record_slider_val():
+    d = collections.deque(maxlen=5)  # circular buffer to avoid catching voltage during ramp down
+    while True:
+        d.append(get_slider_val())
+        if d[-1] < 0.01:
+            break
+        time.sleep(0.01)
+    return max(d)
+
+
+def map_from_to(x, a, b, c, d):
+    return (x-a)/(b-a)*(d-c) + c
 

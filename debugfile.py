@@ -9,11 +9,12 @@ SAMPLERATE = 48828
 slab.set_default_samplerate(SAMPLERATE)
 initialize()
 
-sound = slab.Sound.tone(frequency=900, duration=0.5, level=85, samplerate=48000)
+sound = slab.Sound.tone(frequency=1000, duration=0.5, level=85, samplerate=48000)
 
 sound.play()
 
-
+select_channel(11)
+play(data=sound)
 
 select_channel(3)
 for n in range(0, 16):
